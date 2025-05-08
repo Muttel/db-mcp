@@ -1,0 +1,12 @@
+[project]
+name = "db-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.2.10",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.7.1",
+    "mysql-connector-python>=9.3.0",
+]
