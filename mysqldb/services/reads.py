@@ -275,12 +275,18 @@ def get_grouped_data(
     Groups data by a specified column and applies an aggregation function.
 
     Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to query.
         group_by (str): The column to group by.
         aggregation (str): The aggregation function (e.g., SUM, AVG).
         column (str): The column to aggregate.
 
     Returns:
-        Optional[Dict[str, Any]]: A dictionary with group values as keys and aggregated data as values.
+        Optional[Dict[str, Any]]: A dictionary where keys are group values and values are aggregated data,
+        or None if an error occurs.
     """
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database)
@@ -291,15 +297,13 @@ def get_grouped_data(
 
         cursor.execute(query)
         results = cursor.fetchall()
+        cursor.close()
+        connection.close()
         return {row[group_by]: row['aggregate'] for row in results}
 
     except Error as e:
         logger.error(f"Error fetching grouped data from '{table_name}': {str(e)}")
         return None
-
-    finally:
-        cursor.close()
-        connection.close()
 
 def execute_custom_query(host: str, user: str, password: str, database: str, query: str) -> Optional[List[Dict]]:
     """

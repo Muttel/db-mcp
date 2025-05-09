@@ -1,6 +1,9 @@
 from config.mcp_config import mcp
 from mysqldb.services.schema import get_schema,get_tables, get_table_description
 from mysqldb.services.reads import get_all_rows, get_filtered_rows, get_sorted_rows, get_limited_rows, get_distinct_values, get_aggregated_data, get_grouped_data, execute_custom_query
+from mysqldb.services.ddl import create_table, drop_table, show_indexes, create_index
+from mysqldb.services.dml import insert_row, insert_multiple_rows, delete_rows, update_rows
+
 from typing import Optional, Dict, List, Any
 
 @mcp.tool()
@@ -167,28 +170,172 @@ def mysql_get_grouped_data(host: str, user: str, password: str, database: str, t
     Groups data by a specified column and applies an aggregation function.
 
     Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to query.
         group_by (str): The column to group by.
         aggregation (str): The aggregation function (e.g., SUM, AVG).
         column (str): The column to aggregate.
 
     Returns:
-        Optional[Dict[str, Any]]: A dictionary with group values as keys and aggregated data as values.
+        Optional[Dict[str, Any]]: A dictionary where keys are group values and values are aggregated data,
+        or None if an error occurs.
     """
     return get_grouped_data(host, user, password, database, table_name, group_by, aggregation, column)
 
-# @mcp.tool()
-# def mysql_execute_custom_query(host: str, user: str, password: str, database: str, query: str) -> Optional[List[Dict]]:
-#     """
-#     Executes a custom SQL query and returns the result as a list of dictionaries.
+@mcp.tool()
+def mysql_create_table(host:str, user:str, password:str, database:str, table_name:str, columns: Dict[str, str], options: Optional[Dict[str, str]] = None) -> bool:
+    """
+    Creates a table with the specified columns and options.
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to create.
+        columns (Dict[str, str]): A dictionary of column names and their data types.
+        options (Optional[Dict[str, str]]): Additional options like PRIMARY KEY, AUTO_INCREMENT, UNIQUE, NOT NULL.
+    Returns:
+        bool: True if the table was created successfully, False otherwise.
+    """
+    return create_table(host, user, password, database, table_name, columns, options)
 
-#     Args:
-#         host (str): The database host.
-#         user (str): The database user.
-#         password (str): The database password.
-#         database (str): The database name.
-#         query (str): The SQL query to execute.
+@mcp.tool()
+def mysql_drop_table(host: str, user: str, password: str, database: str, table_name: str) -> bool:
+    """
+    Drops the specified table.
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to drop.
+    Returns:
+        bool: True if the table was dropped successfully, False otherwise.
+    """
+    return drop_table(host, user, password, database, table_name)
 
-#     Returns:
-#         Optional[List[Dict]]: The result of the query as a list of dictionaries, or None if an error occurs.
-#     """
-#     return execute_custom_query(host, user, password, database, query)
+@mcp.tool()
+def mysql_show_indexes(host: str, user: str, password: str, database: str, table_name: str) -> Optional[List[Dict[str, str]]]:
+    """
+    Retrieves all indexes from a given table.
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to retrieve indexes from.
+    Returns:
+        Optional[List[Dict[str, str]]]: A list of dictionaries containing index information, or None if an error occurs.
+    """
+    return show_indexes(host, user, password, database, table_name)
+
+@mcp.tool()
+def mysql_create_index(host: str, user: str, password: str, database: str, table_name: str, index_name: str, columns: List[str], unique: bool = False) -> bool:
+    """
+    Creates an index on the specified columns of a table.
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The table to create the index on.
+        index_name (str): The name of the index.
+        columns (List[str]): A list of column names to be indexed.
+        unique (bool): If True, creates a UNIQUE index. Defaults to False.
+    Returns:
+        bool: True if the index was created successfully, False otherwise.
+    """
+    return create_index(host, user, password, database, table_name, index_name, columns, unique)
+
+@mcp.tool()
+def mysql_insert_row(host:str, user:str, password:str, database:str, table_name:str, data:Dict[str, Any]) -> bool :
+    """
+    Inserts a single row into the specified table.
+
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to insert into.
+        data (Dict[str, Any]): A dictionary containing column names and their values.
+
+    Returns:
+        bool: True if the insertion was successful, False otherwise.
+    """
+    return insert_row(host, user, password, database, table_name, data)
+
+@mcp.tool()
+def mysql_insert_multiple_rows(host: str, user: str, password: str, database: str, table_name: str, data: List[Dict[str, Any]]) -> bool:
+    """
+    Inserts multiple rows into the specified table.
+
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to insert into.
+        data (List[Dict[str, Any]]): A list of dictionaries, each representing a row to insert.
+
+    Returns:
+        bool: True if the insertion was successful, False otherwise.
+    """
+    return insert_multiple_rows(host, user, password, database, table_name, data)
+
+@mcp.tool()
+def mysql_delete_rows(host: str, user: str, password: str, database: str, table_name: str, conditions: Dict[str, Any]) -> bool:
+    """
+    Deletes rows from the specified table based on conditions.
+
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to delete from.
+        conditions (Dict[str, Any]): A dictionary containing conditions to match for deletion.
+
+    Returns:
+        bool: True if the deletion was successful, False otherwise.
+    """
+    return delete_rows(host, user, password, database, table_name, conditions)
+
+@mcp.tool()
+def mysql_update_rows(host: str, user: str, password: str, database: str, table_name: str, data: Dict[str, Any], conditions: Dict[str, Any]) -> bool:
+    """
+    Updates rows in the specified table based on conditions.
+
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        table_name (str): The name of the table to update.
+        data (Dict[str, Any]): A dictionary containing columns and their new values.
+        conditions (Dict[str, Any]): A dictionary containing conditions to match for updating.
+
+    Returns:
+        bool: True if the update was successful, False otherwise.
+    """
+    return update_rows(host, user, password, database, table_name, data, conditions)
+
+@mcp.tool()
+def mysql_execute_custom_query(host: str, user: str, password: str, database: str, query: str) -> Optional[List[Dict]]:
+    """
+    Executes a custom SQL query and returns the result as a list of dictionaries. Only use this if necessary like for complex queries. Reply on built in methods to execute queries.
+
+    Args:
+        host (str): The database host.
+        user (str): The database user.
+        password (str): The database password.
+        database (str): The database name.
+        query (str): The SQL query to execute.
+
+    Returns:
+        Optional[List[Dict]]: The result of the query as a list of dictionaries, or None if an error occurs.
+    """
+    return execute_custom_query(host, user, password, database, query)
