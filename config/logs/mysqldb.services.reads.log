@@ -1,5 +1,0 @@
-2025-05-09 04:17:40 INFO:log_namespace.mysqldb.services.reads Executing custom query: SHOW TABLES;
-2025-05-09 04:18:28 INFO:log_namespace.mysqldb.services.reads Executing custom query: DESCRIBE booking_details;
-2025-05-09 04:19:30 INFO:log_namespace.mysqldb.services.reads Executing query: SELECT * FROM booking_details LIMIT %s OFFSET %s;
-2025-05-09 04:19:40 INFO:log_namespace.mysqldb.services.reads Executing custom query: SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = 'dbms_project' AND TABLE_NAME = 'booking_details';
-2025-05-09 04:23:04 INFO:log_namespace.mysqldb.services.reads Executing query: SELECT DISTINCT `TABLE_NAME` FROM information_schema.tables;

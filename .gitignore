@@ -6,6 +6,9 @@ dist/
 wheels/
 *.egg-info
 logs/*
+# Ignore all log files
+*.log
 
 # Virtual environments
 .venv
+.idea

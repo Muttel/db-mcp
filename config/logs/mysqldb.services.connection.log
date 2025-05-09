@@ -1,6 +1,0 @@
-2025-05-09 04:17:40 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'dbms_project' as user 'root'
-2025-05-09 04:18:28 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'dbms_project' as user 'root'
-2025-05-09 04:19:30 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'dbms_project' as user 'root'
-2025-05-09 04:19:40 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'information_schema' as user 'root'
-2025-05-09 04:23:04 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'dbms_project' as user 'root'
-2025-05-09 04:26:02 INFO:log_namespace.mysqldb.services.connection Successfully connected to MySQL database 'dbms_project' as user 'root'
