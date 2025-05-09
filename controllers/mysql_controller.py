@@ -7,7 +7,7 @@ from mysqldb.services.dml import insert_row, insert_multiple_rows, delete_rows, 
 from typing import Optional, Dict, List, Any
 
 @mcp.tool()
-def get_mysql_tables(host:str, user:str, password:str, database:str) -> Optional[List[str]] :
+def mysql_get_tables(host:str, user:str, password:str, database:str) -> Optional[List[str]] :
     """
     Retrieves the list of table names in a MySQL database.
 
@@ -23,7 +23,7 @@ def get_mysql_tables(host:str, user:str, password:str, database:str) -> Optional
     return get_tables(host=host, user=user, password=password, database=database)
 
 @mcp.tool()
-def get_mysql_schema(host:str, user:str, password:str, database:str) -> Optional[Dict[str, list]] :
+def mysql_get_schema(host:str, user:str, password:str, database:str) -> Optional[Dict[str, list]] :
     """
     Retrieves the schema of a given MySQL database as a dictionary.
 
@@ -40,7 +40,7 @@ def get_mysql_schema(host:str, user:str, password:str, database:str) -> Optional
     return get_schema(host=host, user=user, password=password, database=database)
 
 @mcp.tool()
-def get_mysql_table_description(host:str, user:str, password:str, database:str, table_name:str) -> Optional[Dict[str, list]] :
+def mysql_get_table_description(host:str, user:str, password:str, database:str, table_name:str) -> Optional[Dict[str, list]] :
     """
     Retrieves the schema of a specific table from a given MySQL database.
 
