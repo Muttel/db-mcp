@@ -8,7 +8,7 @@ from mysql.connector import Error
 
 logger = LoggerFactory.get_logger(__name__)
 
-def get_all_rows(host: str, user: str, password: str, database: str, table_name: str, port: int = 3307) -> Optional[List[Dict]]:
+def get_all_rows(host: str, user: str, password: str, database: str, table_name: str, port: int = 3306) -> Optional[List[Dict]]:
     """
     Retrieves all rows from the specified table in the given database.
     """
@@ -33,7 +33,7 @@ def get_all_rows(host: str, user: str, password: str, database: str, table_name:
             connection.close()
 
 def get_filtered_rows(
-    host: str, user: str, password: str, database: str, table_name: str, filters: Dict[str, Any], port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, filters: Dict[str, Any], port: int = 3306
 ) -> Optional[List[Dict]]:
     """
     Retrieves rows from the specified table in the given database based on filter criteria.
@@ -62,7 +62,7 @@ def get_filtered_rows(
             connection.close()
 
 def get_sorted_rows(
-    host: str, user: str, password: str, database: str, table_name: str, sort_by: str, order: str = 'ASC', port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, sort_by: str, order: str = 'ASC', port: int = 3306
 ) -> Optional[List[Dict]]:
     """
     Retrieves sorted rows from the specified table.
@@ -88,7 +88,7 @@ def get_sorted_rows(
             connection.close()
 
 def get_limited_rows(
-    host: str, user: str, password: str, database: str, table_name: str, limit: int, offset: int = 0, port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, limit: int, offset: int = 0, port: int = 3306
 ) -> Optional[List[Dict]]:
     """
     Retrieves a limited number of rows from the specified table.
@@ -114,7 +114,7 @@ def get_limited_rows(
             connection.close()
 
 def get_distinct_values(
-    host: str, user: str, password: str, database: str, table_name: str, column: str, port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, column: str, port: int = 3306
 ) -> Optional[List[Any]]:
     """
     Retrieves distinct values from a specific column in the given table.
@@ -140,7 +140,7 @@ def get_distinct_values(
             connection.close()
 
 def get_aggregated_data(
-    host: str, user: str, password: str, database: str, table_name: str, aggregation: str, column: str, port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, aggregation: str, column: str, port: int = 3306
 ) -> Optional[Any]:
     """
     Retrieves aggregated data from a specified column in the given table.
@@ -166,7 +166,7 @@ def get_aggregated_data(
             connection.close()
 
 def get_grouped_data(
-    host: str, user: str, password: str, database: str, table_name: str, group_by: str, aggregation: str, column: str, port: int = 3307
+    host: str, user: str, password: str, database: str, table_name: str, group_by: str, aggregation: str, column: str, port: int = 3306
 ) -> Optional[Dict[str, Any]]:
     """
     Groups data by a specified column and applies an aggregation function.
@@ -191,7 +191,7 @@ def get_grouped_data(
         if connection:
             connection.close()
 
-def execute_custom_query(host: str, user: str, password: str, database: str, query: str, port: int = 3307) -> Optional[List[Dict]]:
+def execute_custom_query(host: str, user: str, password: str, database: str, query: str, port: int = 3306) -> Optional[List[Dict]]:
     """
     Executes a custom SQL query and returns the result as a list of dictionaries.
     """
