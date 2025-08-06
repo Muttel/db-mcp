@@ -17,20 +17,36 @@ def get_all_rows(host: str, user: str, password: str, database: str, table_name:
     try:
         connection: MySQLConnection = connect_to_mysql(host=host, user=user, password=password, database=database, port=port)
         if not connection:
+            logger.error(f"Failed to connect to database: '{database}'")
             return None
+
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+        
         query = f"SELECT * FROM {table_name};"
+        logger.info(f"Executing query: {query}")
         cursor.execute(query)
+        
         rows: List[Dict] = cursor.fetchall()
+        if not rows:
+            logger.warning(f"No data found in table '{table_name}'")
+            return []
+
+        logger.info(f"Successfully fetched {len(rows)} rows from '{table_name}'")
         return rows
+
     except Error as e:
         logger.error(f"Error occurred while fetching data from '{table_name}': {str(e)}")
         return None
+
     finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
+        try:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+            logger.info("Database connection closed.")
+        except Exception as ex:
+            logger.error(f"Error while closing resources: {str(ex)}")
 
 def get_filtered_rows(
     host: str, user: str, password: str, database: str, table_name: str, filters: Dict[str, Any], port: int = 3306
@@ -43,23 +59,41 @@ def get_filtered_rows(
     try:
         connection: MySQLConnection = connect_to_mysql(host=host, user=user, password=password, database=database, port=port)
         if not connection:
+            logger.error(f"Failed to connect to database: '{database}'")
             return None
+
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+
         where_clauses = [f"`{key}` = %s" for key in filters.keys()]
         where_statement = " AND ".join(where_clauses)
+
         query = f"SELECT * FROM {table_name} WHERE {where_statement};"
         values = list(filters.values())
+        logger.info(f"Executing query: {query} with values {values}")
+
         cursor.execute(query, values)
+
         rows: List[Dict] = cursor.fetchall()
+        if not rows:
+            logger.warning(f"No data found in table '{table_name}' with filters: {filters}")
+            return []
+
+        logger.info(f"Successfully fetched {len(rows)} rows from '{table_name}'")
         return rows
+
     except Error as e:
         logger.error(f"Error occurred while fetching filtered data from '{table_name}': {str(e)}")
         return None
+
     finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
+        try:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+            logger.info("Database connection closed.")
+        except Exception as ex:
+            logger.error(f"Error while closing resources: {str(ex)}")
 
 def get_sorted_rows(
     host: str, user: str, password: str, database: str, table_name: str, sort_by: str, order: str = 'ASC', port: int = 3306
@@ -72,15 +106,22 @@ def get_sorted_rows(
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database, port=port)
         if not connection:
+            logger.error(f"Failed to connect to database: '{database}'")
             return None
+
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+
         query = f"SELECT * FROM {table_name} ORDER BY `{sort_by}` {order};"
+        logger.info(f"Executing query: {query}")
+
         cursor.execute(query)
         rows = cursor.fetchall()
         return rows
+
     except Error as e:
         logger.error(f"Error fetching sorted rows from '{table_name}': {str(e)}")
         return None
+
     finally:
         if cursor:
             cursor.close()
@@ -98,15 +139,22 @@ def get_limited_rows(
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database, port=port)
         if not connection:
+            logger.error(f"Failed to connect to database: '{database}'")
             return None
+
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+
         query = f"SELECT * FROM {table_name} LIMIT %s OFFSET %s;"
+        logger.info(f"Executing query: {query}")
+
         cursor.execute(query, (limit, offset))
         rows = cursor.fetchall()
         return rows
+
     except Error as e:
         logger.error(f"Error fetching limited rows from '{table_name}': {str(e)}")
         return None
+
     finally:
         if cursor:
             cursor.close()
@@ -124,15 +172,22 @@ def get_distinct_values(
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database, port=port)
         if not connection:
+            logger.error(f"Failed to connect to database: '{database}'")
             return None
+
         cursor: MySQLCursor = connection.cursor()
+
         query = f"SELECT DISTINCT `{column}` FROM {table_name};"
+        logger.info(f"Executing query: {query}")
+
         cursor.execute(query)
         values = [row[0] for row in cursor.fetchall()]
         return values
+
     except Error as e:
         logger.error(f"Error fetching distinct values from '{table_name}': {str(e)}")
         return None
+
     finally:
         if cursor:
             cursor.close()
@@ -149,16 +204,19 @@ def get_aggregated_data(
     cursor = None
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database, port=port)
-        if not connection:
-            return None
         cursor: MySQLCursor = connection.cursor()
+
         query = f"SELECT {aggregation}(`{column}`) FROM {table_name};"
+        logger.info(f"Executing query: {query}")
+
         cursor.execute(query)
         result = cursor.fetchone()
         return result[0] if result else None
+
     except Error as e:
         logger.error(f"Error in aggregation on '{table_name}': {str(e)}")
         return None
+
     finally:
         if cursor:
             cursor.close()
@@ -175,13 +233,15 @@ def get_grouped_data(
     cursor = None
     try:
         connection: MySQLConnection = connect_to_mysql(host, user, password, database, port=port)
-        if not connection:
-            return None
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+
         query = f"SELECT `{group_by}`, {aggregation}(`{column}`) AS aggregate FROM {table_name} GROUP BY `{group_by}`;"
+        logger.info(f"Executing query: {query}")
+
         cursor.execute(query)
         results = cursor.fetchall()
         return {row[group_by]: row['aggregate'] for row in results}
+
     except Error as e:
         logger.error(f"Error fetching grouped data from '{table_name}': {str(e)}")
         return None
@@ -202,13 +262,16 @@ def execute_custom_query(host: str, user: str, password: str, database: str, que
         if not connection:
             return None
         cursor: MySQLCursor = connection.cursor(dictionary=True)
+
         logger.info(f"Executing custom query: {query}")
         cursor.execute(query)
         rows = cursor.fetchall()
         return rows
+
     except Error as e:
         logger.error(f"Error executing custom query: {str(e)}")
         return None
+
     finally:
         if cursor:
             cursor.close()
