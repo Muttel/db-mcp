@@ -10,7 +10,7 @@ from mysql.connector import MySQLConnection
 
 logger = LoggerFactory.get_logger(__name__)
 
-def get_tables(host:str, user:str, password:str, database:str, port:int=3307) -> Optional[List[str]]:
+def get_tables(host:str, user:str, password:str, database:str, port:int=3306) -> Optional[List[str]]:
     """
     Retrieves the list of table names in a MySQL database.
 
@@ -57,7 +57,7 @@ def get_tables(host:str, user:str, password:str, database:str, port:int=3307) ->
         if connection:
             connection.close()
 
-def get_schema(host:str, user:str, password:str, database:str, port:int=3307) -> Optional[Dict[str, list]]:
+def get_schema(host:str, user:str, password:str, database:str, port:int=3306) -> Optional[Dict[str, list]]:
     """
     Retrieves the schema of a given MySQL database as a dictionary.
 
@@ -119,7 +119,7 @@ def get_schema(host:str, user:str, password:str, database:str, port:int=3307) ->
         if connection:
             connection.close()
     
-def get_table_description(host:str, user: str, password:str, database:str, table_name:str, port:int=3307) -> Optional[Dict[str, list]]:
+def get_table_description(host:str, user: str, password:str, database:str, table_name:str, port:int=3306) -> Optional[Dict[str, list]]:
     """
     Retrieves the schema of a specific table from a given MySQL database.
 
